@@ -13,7 +13,27 @@ execute:
     warning: false
 ---
 
-'''{r, cleaning and mutating attachment and anxiety data}'''
+```{r, loading packages}
+#| include: false
+
+library(tidyverse)
+library(psych)
+library(gt)
+library(janitor)
+library(dplyr)
+library(gtsummary)
+library(quarto)
+library(readxl)
+
+Attachment_Anxiety_Data <- read_excel("Attachment_Anxiety_Data.xlsx")
+
+print(exists("Attachment_Anxiety_Data"))
+
+exists("Attachment_Anxiety_Data")
+
+```
+```{r, cleaning and mutating attachment and anxiety data}
+#| include: false
 
 attachment_anxiety <- Attachment_Anxiety_Data |>
   rename(
@@ -40,8 +60,9 @@ attachment_anxiety <- Attachment_Anxiety_Data |>
   mutate(
     across(SA_1:SEst_10, as.integer)
   )
-
-'''{r, creating an answer key and scoring items}'''
+```
+```{r, creating an answer key and scoring items}
+#| include: false
 
 SA_answer_key <- list(comp = c("SA_1","SA_2","SA_3","SA_4","-SA_5", "SA_6","SA_7","SA_8","-SA_9","SA_10","-SA_11","SA_12","SA_13","SA_14","SA_15","SA_16","SA_17","SA_18","SA_19","SA_20"))
 AA_answer_key <- list(comp = c("AA_1","AA_2","AA_3","AA_4","AA_5","AA_6","AA_7","AA_8","AA_9"))
@@ -54,8 +75,9 @@ SEst_scores <- scoreItems(SEst_answer_key, attachment_anxiety, totals = F, min =
 SA_scores$alpha
 AA_scores$alpha
 SEst_scores$alpha
-
-'''{r, making scores into data frames and combining all scores}'''
+```
+```{r, making scores into data frames and combining all scores}
+#| include: false
 
 SA_scores.df <- as.data.frame(SA_scores$scores)
 AA_scores.df <- as.data.frame(AA_scores$scores)
@@ -74,8 +96,9 @@ names(attachment_anxiety_outcomes)[3:5] <- c(
   "experiences_in_close_relationships_anxiety",
   "self_esteem"
 )
-
-'''{r, final tables}'''
+```
+```{r, demographic and summary tables}
+#| include: false
 
 demographic.table <- attachment_anxiety_outcomes |>
   select(gender, age_range) |>
@@ -126,8 +149,9 @@ summary.scores |>
   tab_header(
     title = "Table 2. Participant Attachment, Anxiety, & Self-Esteem Outcomes"
     ) 
-
-'''{r, filtering dataset}'''
+```
+```{r, filtered summary tables}
+#| include: false
 
 filtered.summary <- attachment_anxiety_outcomes |>
   filter(gender == "Female")
@@ -158,10 +182,80 @@ filtered.summary.score.table |>
   tab_header(
     title = "Table 3. Female Participant Attachment, Anxiety, & Self-Esteem Outcomes"
   ) 
+```
 
-###Introduction
-###Methods
-###Participants
-###Measures
-###Data Analysis
-###Results
+## Introduction 
+
+The present study sought to explore attachment and social anxiety.
+
+## Methods 
+
+Participants were recruited via the University of Edinburgh’s online learning portal and social media platforms, as well as through word-of-mouth. A flyer with a link to the study was shared on these platforms along with a standard message explaining the purpose of the study, the inclusion criteria (i.e., must be over the age of 18), and the contact details of one of the researchers. The participants followed a link to the questionnaire, which was created using the Online Surveys platform. Participants responded to 3 questionnaires to measure 1) Attachment-related anxiety, 2) Social anxiety and 3) Self-esteem. They were also asked to report their gender, age group, relationship status and ethnicity. 
+
+## Participants 
+
+This study involved `r N` participants. Demographic characteristics of the present sample are depicted in Table 1.
+
+`r demographic.table |>
+  modify_caption("Table 1. Demographic Characteristics") |>
+  as_gt()`
+
+## Measures 
+
+The present study explored the outcomes of interest using the Social Interaction Anxiety Scale, a shortened version of the Attachment-Related Anxiety subscale of the Experiences in Close Relationships Scale, and Rosenberg Self-Esteem Scale. Chronbach's alpha were calculated for each scale, reporting good to excellent reliability `r alphas <- round(c(
+                          SA_scores$alpha,
+                          AA_scores$alpha,
+                          SEst_scores$alpha
+                          ), 2)`, respectively.
+
+## Data Analysis Strategy
+
+Following data collection, data was cleaned by converting survey responses to integers and coding all responses according to the procedures outlined by the scale developers. Items 5, 9, and 11 in the Social Interaction Anxiety Scale and items 2, 5, 6, 8, and 9 in the Rosenberg Self-Esteem Scale were reverse coded. Answer keys were then developed in order to determine participant average scores across all 3 outcome variables.
+
+## Results
+
+The mean Social Interaction Anxiety score was `r round(mean(attachment_anxiety_outcomes$social_interaction_anxiety, na.rm = TRUE), 2)`, the mean Experiences in Close Relationships Anxiety score was `r round(mean(attachment_anxiety_outcomes$experiences_in_close_relationships_anxiety, na.rm = TRUE), 2)`, and the mean Self-Esteem score was `r round(mean(attachment_anxiety_outcomes$self_esteem, na.rm = TRUE), 2)`.All findings are depicted in Table 2.
+
+`r summary.scores |>
+  gt() |>
+  tab_header(
+    title = "Table 2. Participant Attachment, Anxiety, & Self-Esteem Outcomes"
+    )`
+    
+Among female participants, the mean Social Interaction Anxiety score was `r round(mean(filtered.summary$social_interaction_anxiety, na.rm = TRUE), 2)`, the mean Experiences in Close Relationships Anxiety score was `r round(mean(filtered.summary$experiences_in_close_relationships_anxiety, na.rm = TRUE), 2)`, and the mean Self-Esteem score was `r round(mean(filtered.summary$self_esteem, na.rm = TRUE), 2)`. Findings among female participants are further depicted in Table 3.
+
+```{r}
+#| label: table-3
+#| echo: false
+
+filtered.summary <- attachment_anxiety_outcomes |>
+  filter(gender == "Female")
+
+filtered.summary.table <- describe(
+  filtered.summary[, c(
+    "social_interaction_anxiety",
+    "experiences_in_close_relationships_anxiety",
+    "self_esteem"
+  )]
+)
+
+N <- nrow(filtered.summary.table)
+
+filtered.summary.table <- filtered.summary.table |>
+  mutate(
+    Scale = c("Social Interaction Anxiety",
+              "Experiences in Close Relationships Anxiety",
+              "Self-Esteem"
+    )
+  )
+
+filtered.summary.score.table <- filtered.summary.table |>
+  select(Scale, mean, median, sd, range)
+
+filtered.summary.score.table |>
+  gt() |>
+  tab_header(
+    title = "Table 3. Female Participant Attachment, Anxiety, & Self-Esteem Outcomes"
+  ) 
+```
+  

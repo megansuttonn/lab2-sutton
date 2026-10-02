@@ -74,6 +74,48 @@
     "href": "index.html",
     "title": "9041 Assignment 2",
     "section": "",
-    "text": "’’‘{r, cleaning and mutating attachment and anxiety data}’’’\nattachment_anxiety &lt;- Attachment_Anxiety_Data |&gt; rename( gender = Gender, age_range = Age group, relationship_status = Relationship, ethnicity = Ethnicity ) |&gt; mutate( gender = case_when( gender == 1 ~ “Male”, gender == 2 ~ “Female”, TRUE ~ NA_character_ ), age_range = case_when( age_range == 1 ~ “18-24”, age_range == 2 ~ “25-34”, age_range == 3 ~ “35-44”, age_range == 4 ~ “45-54”, age_range == 5 ~ “55-64”, TRUE ~ NA_character_ ) ) |&gt; mutate( across(SA_1:SEst_10, as.integer) )\n’’‘{r, creating an answer key and scoring items}’’’\nSA_answer_key &lt;- list(comp = c(“SA_1”,“SA_2”,“SA_3”,“SA_4”,“-SA_5”, “SA_6”,“SA_7”,“SA_8”,“-SA_9”,“SA_10”,“-SA_11”,“SA_12”,“SA_13”,“SA_14”,“SA_15”,“SA_16”,“SA_17”,“SA_18”,“SA_19”,“SA_20”)) AA_answer_key &lt;- list(comp = c(“AA_1”,“AA_2”,“AA_3”,“AA_4”,“AA_5”,“AA_6”,“AA_7”,“AA_8”,“AA_9”)) SEst_answer_key &lt;- list(comp = c(“SEst_1”,“-SEst_2”,“SEst_3”,“SEst_4”,“-SEst_5”,“-SEst_6”,“SEst_7”,“-SEst_8”,“-SEst_9”,“SEst_10”))\nSA_scores &lt;- scoreItems(SA_answer_key, attachment_anxiety, totals = F, min = 0, max = 4) AA_scores &lt;- scoreItems(AA_answer_key, attachment_anxiety, totals = F, min = 1, max = 7) SEst_scores &lt;- scoreItems(SEst_answer_key, attachment_anxiety, totals = F, min = 1, max = 4)\nSA_scores\\(alpha\nAA_scores\\)alpha SEst_scores$alpha\n’’‘{r, making scores into data frames and combining all scores}’’’\nSA_scores.df &lt;- as.data.frame(SA_scores\\(scores)\nAA_scores.df &lt;- as.data.frame(AA_scores\\)scores) SEst_scores.df &lt;- as.data.frame(SEst_scores$scores)\nSA_AA_SEst_scores.df &lt;- cbind(SA_scores.df, AA_scores.df, SEst_scores.df)\nattachment_anxiety_outcomes &lt;- cbind( gender = attachment_anxiety\\(gender,\n  age_range = attachment_anxiety\\)age_range, SA_AA_SEst_scores.df )\nnames(attachment_anxiety_outcomes)[3:5] &lt;- c( “social_interaction_anxiety”, “experiences_in_close_relationships_anxiety”, “self_esteem” )\n’’‘{r, final tables}’’’\ndemographic.table &lt;- attachment_anxiety_outcomes |&gt; select(gender, age_range) |&gt; tbl_summary( statistic = list( all_continuous() ~ “{mean} ({sd})”, all_categorical() ~ “{n} ({p}%)” ), missing = “no” )\ndemographic.table |&gt; modify_caption(“Table 1. Demographic Characteristics”) |&gt; as_gt()\nsummary &lt;- describe( attachment_anxiety_outcomes[, c( “social_interaction_anxiety”, “experiences_in_close_relationships_anxiety”, “self_esteem” )] )\nN &lt;- nrow(attachment_anxiety_outcomes)\nsummary.table &lt;- summary |&gt; mutate( Scale = c(“Social Interaction Anxiety”, “Experiences in Close Relationships Anxiety”, “Self-Esteem” ) ) |&gt; relocate(.before = 1)\nalphas &lt;- round(c( SA_scores\\(alpha,\n  AA_scores\\)alpha, SEst_scores$alpha ), 2)\nsummary.score.table &lt;- summary.table |&gt; select(Scale, mean, median, sd, range)\nsummary.scores &lt;- cbind(summary.score.table, alphas)\nsummary.scores |&gt; gt() |&gt; tab_header( title = “Table 2. Participant Attachment, Anxiety, & Self-Esteem Outcomes” )\n’’‘{r, filtering dataset}’’’\nfiltered.summary &lt;- attachment_anxiety_outcomes |&gt; filter(gender == “Female”)\nfiltered.summary.table &lt;- describe( filtered.summary[, c( “social_interaction_anxiety”, “experiences_in_close_relationships_anxiety”, “self_esteem” )] )\nN &lt;- nrow(filtered.summary.table)\nfiltered.summary.table &lt;- filtered.summary.table |&gt; mutate( Scale = c(“Social Interaction Anxiety”, “Experiences in Close Relationships Anxiety”, “Self-Esteem” ) )\nfiltered.summary.score.table &lt;- filtered.summary.table |&gt; select(Scale, mean, median, sd, range)\nfiltered.summary.score.table |&gt; gt() |&gt; tab_header( title = “Table 3. Female Participant Attachment, Anxiety, & Self-Esteem Outcomes” )\n###Introduction ###Methods ###Participants ###Measures ###Data Analysis ###Results"
+    "text": "The present study sought to explore attachment and social anxiety."
+  },
+  {
+    "objectID": "index.html#introduction",
+    "href": "index.html#introduction",
+    "title": "9041 Assignment 2",
+    "section": "",
+    "text": "The present study sought to explore attachment and social anxiety."
+  },
+  {
+    "objectID": "index.html#methods",
+    "href": "index.html#methods",
+    "title": "9041 Assignment 2",
+    "section": "Methods",
+    "text": "Methods\nParticipants were recruited via the University of Edinburgh’s online learning portal and social media platforms, as well as through word-of-mouth. A flyer with a link to the study was shared on these platforms along with a standard message explaining the purpose of the study, the inclusion criteria (i.e., must be over the age of 18), and the contact details of one of the researchers. The participants followed a link to the questionnaire, which was created using the Online Surveys platform. Participants responded to 3 questionnaires to measure 1) Attachment-related anxiety, 2) Social anxiety and 3) Self-esteem. They were also asked to report their gender, age group, relationship status and ethnicity."
+  },
+  {
+    "objectID": "index.html#participants",
+    "href": "index.html#participants",
+    "title": "9041 Assignment 2",
+    "section": "Participants",
+    "text": "Participants\nThis study involved 3 participants. Demographic characteristics of the present sample are depicted in Table 1.\n\n\n\n\nTable 1. Demographic Characteristics\n\n\n\n\n\n\nCharacteristic\nN = 631\n\n\n\n\ngender\n\n\n\n\n    Female\n50 (79%)\n\n\n    Male\n13 (21%)\n\n\nage_range\n\n\n\n\n    18-24\n44 (70%)\n\n\n    25-34\n12 (19%)\n\n\n    35-44\n3 (4.8%)\n\n\n    45-54\n1 (1.6%)\n\n\n    55-64\n3 (4.8%)\n\n\n\n1 n (%)"
+  },
+  {
+    "objectID": "index.html#measures",
+    "href": "index.html#measures",
+    "title": "9041 Assignment 2",
+    "section": "Measures",
+    "text": "Measures\nThe present study explored the outcomes of interest using the Social Interaction Anxiety Scale, a shortened version of the Attachment-Related Anxiety subscale of the Experiences in Close Relationships Scale, and Rosenberg Self-Esteem Scale. Chronbach’s alpha were calculated for each scale, reporting good to excellent reliability , respectively."
+  },
+  {
+    "objectID": "index.html#data-analysis-strategy",
+    "href": "index.html#data-analysis-strategy",
+    "title": "9041 Assignment 2",
+    "section": "Data Analysis Strategy",
+    "text": "Data Analysis Strategy\nFollowing data collection, data was cleaned by converting survey responses to integers and coding all responses according to the procedures outlined by the scale developers. Items 5, 9, and 11 in the Social Interaction Anxiety Scale and items 2, 5, 6, 8, and 9 in the Rosenberg Self-Esteem Scale were reverse coded. Answer keys were then developed in order to determine participant average scores across all 3 outcome variables."
+  },
+  {
+    "objectID": "index.html#results",
+    "href": "index.html#results",
+    "title": "9041 Assignment 2",
+    "section": "Results",
+    "text": "Results\nThe mean Social Interaction Anxiety score was 2.39, the mean Experiences in Close Relationships Anxiety score was 3.4, and the mean Self-Esteem score was 2.23.All findings are depicted in Table 2.\n\n\n\n\n\n\nTable 2. Participant Attachment, Anxiety, & Self-Esteem Outcomes\n\n\nScale\nmean\nmedian\nsd\nrange\nalphas\n\n\n\n\nSocial Interaction Anxiety\n2.388889\n2.300000\n0.6987572\n3.000000\n0.90\n\n\nExperiences in Close Relationships Anxiety\n3.398589\n3.111111\n1.6209543\n5.888889\n0.94\n\n\nSelf-Esteem\n2.234921\n2.200000\n0.5074156\n2.200000\n0.85\n\n\n\n\n\nAmong female participants, the mean Social Interaction Anxiety score was 2.44, the mean Experiences in Close Relationships Anxiety score was 3.43, and the mean Self-Esteem score was 2.24. Findings among female participants are further depicted in Table 3.\n\n\n\n\n\n\n\n\nTable 3. Female Participant Attachment, Anxiety, & Self-Esteem Outcomes\n\n\nScale\nmean\nmedian\nsd\nrange\n\n\n\n\nSocial Interaction Anxiety\n2.436000\n2.375000\n0.7211838\n3.000000\n\n\nExperiences in Close Relationships Anxiety\n3.431111\n3.111111\n1.7133507\n5.888889\n\n\nSelf-Esteem\n2.240000\n2.200000\n0.5318432\n2.200000"
   }
 ]
