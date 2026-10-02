@@ -1,0 +1,31 @@
+{
+    "id": "72F1B514",
+    "path": "~/Downloads/lab2-sutton/lab2-sutton.qmd",
+    "project_path": "lab2-sutton.qmd",
+    "type": "quarto_markdown",
+    "hash": "2035529133",
+    "contents": "",
+    "dirty": false,
+    "created": 1790920188926.0,
+    "source_on_save": false,
+    "relative_order": 2,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "224,416",
+        "scrollLine": "233",
+        "rmdVisualMode": "false",
+        "rmdVisualWrapConfigured": "true",
+        "docOutlineVisible": "1",
+        "rmdVisualCollapsedChunks": "",
+        "rmdVisualModeLocation": "228:0"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1790962045,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1790962045831,
+    "read_only": false,
+    "read_only_alternatives": []
+}

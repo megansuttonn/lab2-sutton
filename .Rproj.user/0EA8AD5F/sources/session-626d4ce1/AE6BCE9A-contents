@@ -1,0 +1,58 @@
+
+####Set up####
+
+#install.packages("tidyverse")
+#install.packages("gt")
+#install.packages("psych")
+
+library(tidyverse)
+library(gt)
+library(psych)
+
+#### data ####
+
+personality.df <- read_csv("./bfi.csv")
+
+#is it numeric?
+#is.numeric(personality.df$A2)
+
+#what kind of object is it?
+#typeof(personality.df$A2)
+
+#frequency table for identifying troublesome levels/responses
+#table(personality.df$A2)
+
+#what are all my variables/vectors i can target?
+names(personality.df)
+#"coercing" across types
+personality.df$A2 <- as.numeric(personality.df$A2)
+personality.df$A2_num <- as.numeric(personality.df$A2)#better to save in new column
+
+personality.clean.df <- personality.df |>
+  #new name on left of = 
+  rename(a1 = A1,
+         a2 = A2,
+         a3 = A3,
+         a4 = A4,
+         a5 = A5) |> 
+  filter(age >= 35 ) |>
+  #filter(gender == 1) |> 
+  select(gender:age, a1:a5) |> 
+  mutate(agree = a1 + a2 + a3 + a4 + a5,
+         constant = 1,
+         a2_num = as.numeric(a2),
+         gender_char = case_when(gender == 1 ~ "Male",
+                                 gender == 2 ~ "Female",
+                                 TRUE ~ "Other"),
+         age_char = case_when(age > 60 ~ "Old",
+                              TRUE ~ "Young")) 
+
+#creating the beginnings of a reproducible table of descrpitive
+#statistics
+describe.tab <- personality.clean.df |> #take cleaned data set
+  select(a1:a5, agree) |> # take the a1-a5 items and agree composite
+  describe()#and calculate descriptive statistics using psych::describe
+
+#returning a gt-table (takes a data-frame as input)
+#can be used to render a reproducible table in quarto
+gt(describe.tab)#
